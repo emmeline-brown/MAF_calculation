@@ -1,6 +1,6 @@
-#Calculate minor allele frequency of a biallelic variant in Plink format
-#Step 1: use Plink to select a single variant
-#This is demonstrated on the rs53576 chr3:8804371-8804371 which  is a silent G to A change in the oxytocin receptor (OXTR)
+#Calculate the minor allele frequency (MAF) of a biallelic variant in Plink format
+#Before using this script, use Plink to select a single variant from a post quality control next generation sequencing dataset
+#This script is demonstrated on the rs53576 chr3:8804371-8804371 which  is a silent G to A change in the oxytocin receptor (OXTR)
 #A is the minor allele
 
 #load package
@@ -9,8 +9,8 @@ library(tidyverse)
 
 #input files
 
-my_var_map <- read_tsv("/path/to/snp/rs53576.map", col_names = F)
-my_var_ped <- read_tsv("/path/to/snp/rs53576.ped", col_names = F)
+my_var_map <- read_tsv("/path/to/variant/rs53576.map", col_names = F)
+my_var_ped <- read_tsv("/path/to/variant/rs53576.ped", col_names = F)
 
 #select relevant variable from .MAP file
 my_var_map <-
@@ -36,6 +36,7 @@ rm(my_var_ped, my_var_map)
 #remove white spaces from variant
 map_ped$rs53576 <- gsub(" ", "", map_ped$rs53576)
 
+#count variant
 count_rs <- dplyr::summarise(group_by(map_ped, rs53576, count =n()))
 count_rs <- 
   count_rs %>% 
@@ -53,7 +54,7 @@ MAF <- count_rs %>%
   select(-allele_number, -allele_count, -minor_hom, -total_count, -AA, -GA, -GG)
 
 #write table
-write_csv(MAF, "path/to/saving/SNP_MAF.csv")
+write_csv(MAF, "path/to/saving/variant_MAF.csv")
 
 #remove additional
 rm(count_rs, MAF, map_ped)
