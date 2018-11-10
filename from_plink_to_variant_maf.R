@@ -51,7 +51,7 @@ MAF <- count_rs %>%
          allele_count = minor_hom + GA) %>% #change this to the heterozygote allele required
   mutate(MAF = allele_count/allele_number) %>% 
   mutate(total_individuals = AA + GA + AA) %>% #change if required
-  select(-allele_number, -allele_count, -minor_hom, -total_count, -AA, -GA, -GG)
+  select(MAF, total_individuals)
 
 #write table
 write_csv(MAF, "path/to/saving/variant_MAF.csv")
